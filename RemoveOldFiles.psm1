@@ -81,7 +81,7 @@ function Remove-OldFiles {
             seconds ago if you leave out -WhatIf.
 
         .EXAMPLE
-            Remove-OldFiles -Path . -Minute 1 -Recurse -NameRegexMatch '^startswiththis'
+            Remove-OldFiles -Path . -Minute 1 -Second 20 -Recurse -NameRegexMatch '^startswiththis'
 
             Removes all files in the current directory that were modified more than 1 minute 
             and twenty seconds ago. Not full minutes or seconds above; even one minute twenty
