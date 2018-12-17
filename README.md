@@ -12,7 +12,7 @@ The times specified from ms to months are all cumulated and added together to
 form a large decimal-typed millisecond number. Months are handled with .NET date
 math as calendar months converted to milliseconds.
 
-You can specify a `-NameFilterRegex` parameter to only target only file names
+You can specify a `-NameRegexMatch` parameter to only target only file names
 that match this regular expression. The default is simply `.*`.
 
 This regex always matches, so name filtering is in effect not enabled by default unless you override with this
