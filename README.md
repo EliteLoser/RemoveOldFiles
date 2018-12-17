@@ -13,15 +13,17 @@ form a large decimal-typed millisecond number. Months are handled with .NET date
 math as calendar months converted to milliseconds.
 
 You can specify a -NameFilterRegex parameter to only target only file names
-that match this regular expression. The default is simply .*
+that match this regular expression. The default is simply `.*`.
 
 This regex always matches, so name filtering is in effect not enabled by default unless you override with this
 parameter. NB! It is not wildcards such as for the -like operator, but regular
 expressions, so make sure you test and know that the results are as expected. I plan to implement a 
--NameWildcard parameter, but might put it off for years, knowing myself.
+-NameWildcard parameter, but might put it off for years, knowing myself. Demand helps.
 
 It supports -WhatIf in a non-proper implementation currently (but functionally not
 too different, it was just a bit easier and also caused by a now gone, dead end in code).
+I'm in two minds about changing it to the proper implementation, but will likely do it soon for
+assumed broader acceptance of the code.
 
 # Examples
 
