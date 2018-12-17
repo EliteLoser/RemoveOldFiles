@@ -243,12 +243,13 @@ function Remove-OldFiles {
         [Decimal] $Script:DeleteCount = 0
         [Bool] $FirstLevelDirectoryListing = $True
 
+        <# Abandoned.
         [HashTable] $Script:RecurseSplat = @{}
         if ($Recurse) {
             $Script:RecurseSplat = @{
                 Recurse = $True
             }
-        }
+        }#>
 
         [HashTable] $Script:WhatIfSplat = @{}
         if ($WhatIf) {
