@@ -25,6 +25,20 @@ too different, it was just a bit easier and also caused by a now gone, dead end 
 I'm in two minds about changing it to the proper implementation, but will likely do it soon for
 assumed broader acceptance of the code.
 
+# Installation from the PowerShell Gallery
+
+The module is published to the PowerShell Gallery, so you can install it with for instance this command for your user only:
+
+`Install-Module -Name RemoveOldFiles -Scope CurrentUser #-Force`
+
+Or you can download it with:
+
+`Save-Module -Name RemoveOldFiles -Path C:\Scripts`
+
+And inspect it first with:
+
+`Find-Module -Name RemoveOldFiles | Format-List *`
+
 # Examples
 
 ```
