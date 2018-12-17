@@ -18,7 +18,7 @@ that match this regular expression. The default is simply `.*`.
 This regex always matches, so name filtering is in effect not enabled by default unless you override with this
 parameter. NB! It is not wildcards such as for the `-like` operator, but regular
 expressions, such as for the `-match` operator, so make sure you test and know that the results are as expected. I plan to implement a 
--NameFilterWildcard parameter, but might put it off for years, knowing myself. Demand helps...
+`-NameWildcardMatch` parameter, but might put it off for years, knowing myself. Demand helps...
 
 It supports -WhatIf in a non-proper implementation currently (but functionally not
 too different, it was just a bit easier and also caused by a now gone, dead end in code).
