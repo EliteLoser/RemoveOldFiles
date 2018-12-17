@@ -405,13 +405,8 @@ PS C:\temp\testdir>
 
 Examples of Resolve-Path support baked in, without recurse, to do directories only one and two levels deep:
 
-```
-PS C:\temp\testdir> $mydir, "$mydir/1", "$mydir/1/2", "$mydir/1/2/3" | %{
-    New-RandomData -Path $_ -BaseName deletethese -Extension .tmp -Count 3 `
-    -Size 1024 -LineLength 128 }
-
-PS C:\temp\testdir> Remove-OldFiles -Path ./*/* -Second 10 -NameRegexMatch '\.tmp$'
-VERBOSE: Recorded 'now' time as: 2018-12-17 21:16:19
+```PS C:\temp\testdir> Remove-OldFiles -Path ./*/* -Second 10 -NameRegexMatch '\.tmp$'
+VERBOSE: Recorded 'now' time as: 2018-12-17 21:18:17
 VERBOSE: Total milliseconds: 10000.
 0 months.
 0 weeks.
@@ -427,52 +422,50 @@ VERBOSE: Processing first level directory with path: 'C:\temp\testdir\1\2'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\3'.
 VERBOSE: -Recurse parameter not specified, so directory 'C:\temp\testdir\1\2\3' is skipped.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\deletethese1.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\2\deletethese1.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\2\deletethese1.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$'
+ (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\deletethese2.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\2\deletethese2.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\2\deletethese2.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$'
+ (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\deletethese3.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\2\deletethese3.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\2\deletethese3.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$'
+ (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\keepThese1.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese1.log' does not match the specified name regex: '\.tmp$' (default '
-.*').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese1.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\keepThese2.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese2.log' does not match the specified name regex: '\.tmp$' (default '
-.*').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese2.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\2\keepThese3.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese3.log' does not match the specified name regex: '\.tmp$' (default '
-.*').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\2\keepThese3.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\deletethese1.tmp'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\deletethese1.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\deletethese1.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\deletethese1.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$' (
+default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\deletethese2.tmp'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\deletethese2.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\deletethese2.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\deletethese2.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$' (
+default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\deletethese3.tmp'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\deletethese3.tmp'.
-VERBOSE: Ignoring file 'C:\temp\testdir\1\deletethese3.tmp' because it was modified less than 10000 ms ago.
+VERBOSE: Removing file 'C:\temp\testdir\1\deletethese3.tmp' because it was modified more than 10000 ms ago and matches the specified name regex: '\.tmp$' (
+default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\keepThese1.log'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\keepThese1.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese1.log' does not match the specified name regex: '\.tmp$' (default '.*
-').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese1.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\keepThese2.log'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\keepThese2.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese2.log' does not match the specified name regex: '\.tmp$' (default '.*
-').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese2.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\1\keepThese3.log'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\1\keepThese3.log'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese3.log' does not match the specified name regex: '\.tmp$' (default '.*
-').
+VERBOSE: Ignoring. File 'C:\temp\testdir\1\keepThese3.log' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: In foreach $TempTempPath processing path 'C:\temp\testdir\RandomData\1.2'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\RandomData\1.2'.
 VERBOSE: Processing first level directory with path: 'C:\temp\testdir\RandomData\1.2'.
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\RandomData\1.2\RandomData.psd1'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\RandomData\1.2\RandomData.psd1' does not match the specified name regex: '\.tmp$
-' (default '.*').
+VERBOSE: Ignoring. File 'C:\temp\testdir\RandomData\1.2\RandomData.psd1' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: in InnerProcessPath processing 'C:\temp\testdir\RandomData\1.2\RandomData.psm1'.
-VERBOSE: Ignoring. File 'C:\temp\testdir\RandomData\1.2\RandomData.psm1' does not match the specified name regex: '\.tmp$
-' (default '.*').
+VERBOSE: Ignoring. File 'C:\temp\testdir\RandomData\1.2\RandomData.psm1' does not match the specified name regex: '\.tmp$' (default '.*').
 VERBOSE: Total processed path count was: 17
-VERBOSE: Attempted to delete 0 files.
+VERBOSE: Attempted to delete 6 files.
 
 PS C:\temp\testdir> 
 ```
