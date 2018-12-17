@@ -2,8 +2,8 @@ function Remove-OldFiles {
     <#
     .SYNOPSIS
         
-            Removes files that are older than the specified number of milliseconds,
-            seconds, minutes, hours, days, weeks or months - or a combination of any
+            Removes files that were last modified before the specified number of milliseconds,
+            seconds, minutes, hours, days, weeks or months back in time - or a combination of any
             of these.
         
             Optional file name filtering with a regular expression.
