@@ -4,7 +4,8 @@ function Remove-OldFiles {
         
             Removes files that were last modified before the specified number of milliseconds,
             seconds, minutes, hours, days, weeks or months back in time - or a combination of any
-            of these.
+            of these. The "LastWriteTime" property as returned from Get-ChildItem or Get-Item is
+            used.
         
             Optional file name filtering with a regular expression.
 
