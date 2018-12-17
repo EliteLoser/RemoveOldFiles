@@ -405,7 +405,8 @@ PS C:\temp\testdir>
 
 Examples of Resolve-Path support baked in, without recurse, to do directories only one and two levels deep:
 
-```PS C:\temp\testdir> Remove-OldFiles -Path ./*/* -Second 10 -NameRegexMatch '\.tmp$'
+```
+PS C:\temp\testdir> Remove-OldFiles -Path ./*/* -Second 10 -NameRegexMatch '\.tmp$'
 VERBOSE: Recorded 'now' time as: 2018-12-17 21:18:17
 VERBOSE: Total milliseconds: 10000.
 0 months.
