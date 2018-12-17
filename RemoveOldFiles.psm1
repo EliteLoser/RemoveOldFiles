@@ -335,7 +335,7 @@ $Millisecond milliseconds."
 
                             Write-Verbose ("Would have removed '$($Item.FullName
                                 ) because it was modified more than $TotalMillisecondsBack ms ago and matches " + `
-                                "the specified name regex> '$NameRegexMatch' (default '.*'), without -WhatIf in use.")
+                                "the specified name regex: '$NameRegexMatch' (default '.*'), without -WhatIf in use.")
 
                             ++$Script:DeleteCount
 
