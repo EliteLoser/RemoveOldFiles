@@ -8,7 +8,7 @@ of these. They are cumulatively combined.
         
 Optional file name filtering with a regular expression, otherwise all files are targeted.
 
-Optional recursion. Resolve-Path support that allows for directories two levels deep with something like `-Path C:\foo\*\*`.
+Optional recursion. Resolve-Path support that allows for directories for instance two levels deep with something like `-Path C:\foo\*\*`.
 
 The times specified from ms to months are all cumulated and added together to
 form a large decimal-typed millisecond number. Months are handled with .NET date
