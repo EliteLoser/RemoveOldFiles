@@ -271,7 +271,7 @@ function Remove-OldFiles {
             Write-Error -Message ("Error. You need to specify how long back in time to filter on. All files that " + `
                 "were modified before the specified number of milliseconds, seconds, minutes, hours, days, weeks " + `
                 "and months will be attempted deleted. If you add multiple, such as -Minute 1 and -Second 30, it" + `
-                " would be added up to 90 seconds / 1.5 minutes.") `
+                " will be added up to 90 seconds / 1.5 minutes.") `
                 -ErrorAction Stop
         }
         Write-Verbose "Total milliseconds: $TotalMillisecondsBack.
