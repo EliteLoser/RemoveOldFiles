@@ -230,23 +230,31 @@ function Remove-OldFiles {
         [DateTime] $Script:Now = Get-Date
         Write-Verbose "Recorded 'now' time as: $($Now.ToString('yyyy\-MM\-dd HH\:mm\:ss'))"
 
+        <# 
+        Dead end?
+
         # Use to avoid infinite loops, use the ProviderPath property, store it and do not process
         # if it's already been processed. Lookups are fast.
 
         [HashTable] $Script:AlreadyProcessed = @{}
+        #>
 
         [Decimal] $Script:InnerProcessPathCounter = 0
         [Decimal] $Script:DeleteCount = 0
-        [Bool] $Script:FirstLevelDirectoryListing = $True
+        [Bool] $FirstLevelDirectoryListing = $True
 
         [HashTable] $Script:RecurseSplat = @{}
         if ($Recurse) {
-            $Script:RecurseSplat = @{ Recurse = $True }
+            $Script:RecurseSplat = @{
+                Recurse = $True
+            }
         }
 
         [HashTable] $Script:WhatIfSplat = @{}
         if ($WhatIf) {
-            $Script:WhatIfSplat = @{ WhatIf = $True }
+            $Script:WhatIfSplat = @{
+                WhatIf = $True
+            }
         }
 
         # Months is a special case since it's not fixed like the rest.
@@ -282,79 +290,90 @@ $Hour hours.
 $Minute minutes.
 $Second seconds.
 $Millisecond milliseconds."
-    
+        
+        # This seems to do some of the trick.. optimized variable and stuff.
+        $Script:InGetChildItem = $False
+
         function InnerProcessPath {               
 
-            Param([String[]] $Path)
-            foreach ($TempInnerPath in $Path) {
+            Param([String] $Path)
+                
+            [Bool] $FirstLevelDirectoryListing = $True
+                
+            ++$Script:InnerProcessPathCounter
 
-                ++$Script:InnerProcessPathCounter
+            # Hm, this had unexpected side effects when considering multiple path support.
+            # My life would have been a lot easier with a single path supported here.
+            #if ($Script:AlreadyProcessed.ContainsKey($Path)) {
+            #    continue
+            #}
 
-                if ($Script:AlreadyProcessed.ContainsKey($TempInnerPath)) {
-                    continue
-                }
+            Write-Verbose "in InnerProcessPath processing '$Path'."
+            if (Test-Path -LiteralPath $Path -PathType Container) {
 
-                Write-Verbose "in foreach processing '$TempInnerPath'."
-                if (Test-Path -LiteralPath $TempInnerPath -PathType Container) {
+                if ($Recurse -or ($FirstLevelDirectoryListing -and $InGetChildItem -eq $False)) {
 
-                    if ($Recurse -or $Script:FirstLevelDirectoryListing) {
-
-                        if ($Script:FirstLevelDirectoryListing) {
-                            Write-Verbose "Processing first level directory with path: '$TempInnerPath'."
-                            $Script:FirstLevelDirectoryListing = $False
-                        }
-
-                        Get-ChildItem -LiteralPath $TempInnerPath | ForEach-Object {
-                            InnerProcessPath -Path $_.FullName
-                        }
-
+                    if ($FirstLevelDirectoryListing) {
+                        Write-Verbose "Processing first level directory with path: '$Path'."
+                        $FirstLevelDirectoryListing = $False
                     }
-
-                    else {
-
-                        Write-Verbose "-Recurse parameter not specified, so directory '$TempInnerPath' is skipped."
-
+                        
+                        
+                    Get-ChildItem -LiteralPath $Path | ForEach-Object {
+                        $Script:InGetChildItem = $True
+                        InnerProcessPath -Path $_.FullName
                     }
-
-                }
-
-                elseif (Test-Path -LiteralPath $TempInnerPath -PathType Leaf) {
-                    $Item = Get-Item -LiteralPath $TempInnerPath
-                    if (($Script:Now - $Item.LastWriteTime).TotalMilliseconds -gt $TotalMillisecondsBack) {
-                        if (-not $WhatIf -and $Item.Name -match $NameRegexMatch) {
-                            Write-Verbose "Removing file '$($Item.FullName
-                                )' because it was modified more than $($TotalMillisecondsBack
-                                ) ms ago and matches the specified name regex: '$NameRegexMatch' (default '.*')."
-
-                            ++$Script:DeleteCount
-
-                            Remove-Item -LiteralPath $Item.FullName @Script:WhatIfSplat
-
-                        }
-
-                        elseif ($Item.Name -match $NameRegexMatch) {
-
-                            Write-Verbose ("Would have removed '$($Item.FullName
-                                ) because it was modified more than $TotalMillisecondsBack ms ago and matches " + `
-                                "the specified name regex: '$NameRegexMatch' (default '.*'), without -WhatIf in use.")
-
-                            ++$Script:DeleteCount
-
-                        }
-
-                    }  
-
+                    $Script:InGetChildItem = $False
                 }
 
                 else {
-
-                    Write-Warning -Message "Path '$TempInnerPath' doesn't exist. Skipping."
-
+                    Write-Verbose "-Recurse parameter not specified, so directory '$Path' is skipped."
                 }
 
-                $Script:AlreadyProcessed[$TempInnerPath] = $True
+            }
 
-            } # end of foreach $TempPath (processing $TempInnerPath)
+            elseif (Test-Path -LiteralPath $Path -PathType Leaf) {
+                    
+                $Item = Get-Item -LiteralPath $Path
+                    
+                if (($Script:Now - $Item.LastWriteTime).TotalMilliseconds -gt $TotalMillisecondsBack) {
+                    
+                    if (-not $WhatIf -and $Item.Name -match $NameRegexMatch) {
+                        Write-Verbose "Removing file '$($Item.FullName
+                            )' because it was modified more than $($TotalMillisecondsBack
+                            ) ms ago and matches the specified name regex: '$NameRegexMatch' (default '.*')."
+
+                        ++$Script:DeleteCount
+                        Remove-Item -LiteralPath $Item.FullName @Script:WhatIfSplat
+                    }
+
+                    elseif ($Item.Name -match $NameRegexMatch) {
+                        Write-Verbose ("Would have removed '$($Item.FullName
+                            ) because it was modified more than $TotalMillisecondsBack ms ago and matches " + `
+                            "the specified name regex: '$NameRegexMatch' (default '.*'), without -WhatIf in use.")
+
+                        ++$Script:DeleteCount
+                    }
+                    elseif ($WhatIf) {
+                        Write-Verbose "Ignoring. -WhatIf in use and file '$($Item.FullName
+                            )' does not match the specified name regex: '$NameRegexMatch' (default '.*')."
+                    }
+                    else {
+                        Write-Verbose ("Ignoring. File '$($Item.FullName)' does not match the " + `
+                            "specified name regex: '$NameRegexMatch' (default '.*').")
+                    }
+                }
+                else {
+                    Write-Verbose "Ignoring file '$($Item.FullName)' because it was modified less than $TotalMillisecondsBack ms ago."
+                }
+
+            }
+            else {
+                Write-Warning -Message "Path '$Path' doesn't exist. Skipping."
+            }
+
+            # Abandoned.
+            #$Script:AlreadyProcessed[$Path] = $True
 
         } # end of function
 
@@ -370,12 +389,16 @@ $Millisecond milliseconds."
         }
 
         foreach ($TempPath in $PathsToProcess) {
+            
             $PathBeforeResolvePath = $TempPath
+            
             Write-Verbose "Processing path '$PathBeforeResolvePath'."
+            
             if ($PSCmdlet.ParameterSetName -eq "Path") {
                 $TempPath = @(Resolve-Path -Path $TempPath |
                     Select-Object -ExpandProperty ProviderPath)
             }
+            
             else {
                 $TempPath = @(Resolve-Path -LiteralPath $TempPath |
                     Select-Object -ExpandProperty ProviderPath)
@@ -386,15 +409,21 @@ $Millisecond milliseconds."
                 continue
             }
 
-            InnerProcessPath -Path $TempPath
+            #$Script:FirstLevelDirectoryListing = $True
+            foreach ($TempTempPath in $TempPath) {
+                Write-Verbose "In foreach `$TempTempPath processing path '$TempTempPath'."
+                $Script:InGetChildItem = $False
+                InnerProcessPath -Path $TempTempPath
+            }
 
-        }
+        } # end of foreach $TempPath in $PathsToProcess
 
     }
 
     End {
 
         Write-Verbose "Total processed path count was: $Script:InnerProcessPathCounter"
+
         if ($WhatIf) {
             Write-Verbose "Would have attempted to delete $Script:DeleteCount files without -WhatIf in use."
         }
