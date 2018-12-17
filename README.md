@@ -1,6 +1,6 @@
 # RemoveOldFiles
 
-Use Svendsen Tech's Remove-OldFiles function to delete files based on date logic with time granularity ranging from milliseconds to months, and an optional file name regex filter.
+Use Svendsen Tech's `Remove-OldFiles` function to delete files based on date logic with time granularity ranging from milliseconds to months, and an optional file name regex filter.
 
 Removes files that are older than the specified number of milliseconds,
 seconds, minutes, hours, days, weeks or months - or a combination of any
@@ -16,9 +16,9 @@ You can specify a -NameFilterRegex parameter to only target only file names
 that match this regular expression. The default is simply `.*`.
 
 This regex always matches, so name filtering is in effect not enabled by default unless you override with this
-parameter. NB! It is not wildcards such as for the -like operator, but regular
-expressions, so make sure you test and know that the results are as expected. I plan to implement a 
--NameWildcard parameter, but might put it off for years, knowing myself. Demand helps.
+parameter. NB! It is not wildcards such as for the `-like` operator, but regular
+expressions, such as for the `-match` operator, so make sure you test and know that the results are as expected. I plan to implement a 
+-NameFilterWildcard parameter, but might put it off for years, knowing myself. Demand helps...
 
 It supports -WhatIf in a non-proper implementation currently (but functionally not
 too different, it was just a bit easier and also caused by a now gone, dead end in code).
