@@ -30,7 +30,7 @@ CompanyName = 'Svendsen Tech'
 Copyright = '(c) 2018-present Joakim Borger Svendsen. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Use Svendsen Tech''s Remove-OldFiles function to delete files based on date logic with time granularity ranging from milliseconds to months, and an optional file name regex filter. GitHub here: https://github.com/EliteLoser/RemoveOldFiles'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '2.0'
