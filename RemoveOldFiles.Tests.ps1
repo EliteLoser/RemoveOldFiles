@@ -111,5 +111,5 @@ Describe RemoveOldFiles {
 
 # Clean up.
 
-Remove-Item -LiteralPath "$Env:Temp\RandomData" -Recurse #-Force
+Remove-Item -LiteralPath "$Env:Temp\RandomData" -Recurse -Force
 Remove-Item -LiteralPath "$Env:Temp\RemoveOldFiles.Tests.Svendsen.Tech" -Recurse #-Force
