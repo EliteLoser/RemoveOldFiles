@@ -4,7 +4,7 @@ Use Svendsen Tech's `Remove-OldFiles` function to delete files based on date log
 
 Removes files that are older than the specified number of milliseconds,
 seconds, minutes, hours, days, weeks or months - or a combination of any
-of these. They are cumulatively combined.
+of these. They are added together.
         
 Optional file name filtering with a regular expression, otherwise all files are targeted.
 
@@ -419,7 +419,7 @@ PS C:\temp\testdir> # 0, so they were all successfully deleted
 PS C:\temp\testdir> 
 ```
 
-Examples of Resolve-Path support baked in, without recurse, to do directories only one and two levels deep:
+Examples of Resolve-Path support baked in, without `-Recurse`, to do directories only one and two levels deep:
 
 ```
 PS C:\temp\testdir> Remove-OldFiles -Path ./*/* -Second 10 -NameRegexMatch '\.tmp$'
