@@ -6,7 +6,6 @@
 
 Import-Module -Name Pester -ErrorAction Stop
 Import-Module -Name RemoveOldFiles -ErrorAction Stop
-#ipmo ..\GetSTFolderSize -Force
 
 # This is mine also, in the PowerShell Gallery. Just crudely making it available for the tests.
 Save-Module -Name RandomData -Path $Env:Temp -Force
@@ -44,84 +43,67 @@ Describe RemoveOldFiles {
 
     It "Does not delete any files with -WhatIf in use and 1 ms back in time with -Path." {
         (Remove-OldFiles -Path $STBaseDir -WhatIf -Millisecond 1) 4> $Null
-        (Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count | Should -Be 24
-        (Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $True }).Count | Should -Be 3
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count | Should -Be 24
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -Directory).Count | Should -Be 3
     }
 
     It "Does not delete any files with -WhatIf in use and 1 ms back in time with -LiteralPath." {
         (Remove-OldFiles -LiteralPath $STBaseDir -WhatIf -Millisecond 1) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count | Should -Be 24
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $True }).Count | Should -Be 3
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count | Should -Be 24
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -Directory).Count | Should -Be 3
     }
 
     It "Deletes only one level deep without recursion with -Path." {
         (Remove-OldFiles -Path $STBaseDir -Millisecond 1) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 18
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
+    
     It "Deletes only one level deep without recursion with -LiteralPath." {
         (Remove-OldFiles -LiteralPath $STBaseDir -Millisecond 1) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 18
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
+    
     It "Deletes two levels deep with Resolve-Path support with -Path." {
         (Remove-OldFiles -Path "$STBaseDir\*\*" -Millisecond 1) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 12
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
-    It "Deletes two levels deep with Resolve-Path support with -Path, and filters on a name regex." {
+    
+    It "Deletes two levels deep with Resolve-Path support with -Path, and also filters on a name regex." {
         (Remove-OldFiles -Path "$STBaseDir\*\*" -Millisecond 1 -NameRegexMatch '^delete') 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 18
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
+    
     It "Deletes all 'old' files with recursion" {
         (Remove-OldFiles -Path $STBaseDir -Millisecond 1 -Recurse) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 0
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
+    
     It "Deletes only files matching the file name regex specified with recursion." {
         (Remove-OldFiles -Path $STBaseDir -Millisecond 1 -Recurse -NameRegexMatch '\.delete$') 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 12
     }
 
     SetFilesInPlace
-    Start-Sleep -Milliseconds 1
-
+    
     It "Deletes no files if the specified time back is longer ago than since when the files were created." {
         (Remove-OldFiles -Path $STBaseDir -Month 12 -Recurse) 4> $Null
-        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse |
-            Where-Object { $_.PSIsContainer -eq $False }).Count |
+        @(Get-ChildItem -LiteralPath $STBaseDir -Recurse -File).Count |
             Should -Be 24
     }
 
@@ -129,5 +111,5 @@ Describe RemoveOldFiles {
 
 # Clean up.
 
-Remove-Item -LiteralPath "$Env:Temp\RandomData" -Force -Recurse
-Remove-Item -LiteralPath "$Env:Temp\RemoveOldFiles.Tests.Svendsen.Tech" -Force -Recurse
+Remove-Item -LiteralPath "$Env:Temp\RandomData" -Recurse #-Force
+Remove-Item -LiteralPath "$Env:Temp\RemoveOldFiles.Tests.Svendsen.Tech" -Recurse #-Force
