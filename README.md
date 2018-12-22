@@ -2,10 +2,10 @@
 
 Use Svendsen Tech's `Remove-OldFiles` function to delete files based on date logic with time granularity ranging from milliseconds to months, and an optional file name regex filter.
 
-Removes files that are older than the specified number of milliseconds,
+Removes files that are "older" than the specified number of milliseconds,
 seconds, minutes, hours, days, weeks or months - or a combination of any
-of these. They are added together.
-        
+of these, as calculated based on the "LastWriteTime" property returned from Get-Item, for determining "age". All the specified time units are added together.
+
 Optional file name filtering with a regular expression, otherwise all files are targeted.
 
 Optional recursion. Resolve-Path support that allows for directories for instance two levels deep with something like `-Path C:\foo\*\*`.
