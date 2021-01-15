@@ -85,8 +85,8 @@ function Remove-OldFiles {
             Remove-OldFiles -Path . -Minute 1 -Second 20 -Recurse -NameRegexMatch '^startswiththis'
 
             Removes all files in the current directory that were modified more than 1 minute 
-            and twenty seconds ago. Not full minutes or seconds above; even one minute twenty
-            seconds and one single millisecond extra since last modification will trigger removal.
+            and twenty seconds ago. Even one minute twenty seconds and one single millisecond extra 
+            since last modification will trigger removal.
 
         .EXAMPLE
         PS C:\temp\testdir> Remove-OldFiles -Path . -Minute 17 -Recurse -NameRegexMatch '\.tmp$' 
@@ -262,19 +262,20 @@ function Remove-OldFiles {
         # Figure it'll make it awesomerer to support that as well.
         [Decimal] $TotalMillisecondsBack = 0
         if ($Month -gt 0) {
-            $LastMontshMilliseconds = ($Now - $Now.AddMonths(( -1 * $Month ))).TotalMilliseconds
+            $LastMontshMilliseconds = ($Now - $Now.AddMonths((-1 * $Month))).TotalMilliseconds
         }
         else {
             $LastMontshMilliseconds = 0
         }
-
+        
+        # Changed to always use .NET date math. This way we should eliminate the corner cases of leap seconds.
         $TotalMillisecondsBack += $LastMontshMilliseconds
-        $TotalMillisecondsBack += $Millisecond
-        $TotalMillisecondsBack += $Second * 1000
-        $TotalMillisecondsBack += $Minute * 60 * 1000
-        $TotalMillisecondsBack += $Hour * 60 * 60 * 1000
-        $TotalMillisecondsBack += $Day * 24 * 60 * 60 * 1000
-        $TotalMillisecondsBack += $Week * 7 * 24 * 60 * 60 * 1000
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Millisecond)))).TotalMilliseconds
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Second * 1000)))).TotalMilliseconds
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Minute * 60 * 1000)))).TotalMilliseconds
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Hour * 60 * 60 * 1000)))).TotalMilliseconds
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Day * 24 * 60 * 60 * 1000)))).TotalMilliseconds
+        $TotalMillisecondsBack = ($Now - $Now.AddMilliseconds((-1 * ($TotalMillisecondsBack + $Week * 7 * 24 * 60 * 60 * 1000)))).TotalMilliseconds
 
         if ($TotalMillisecondsBack -eq 0) {
             Write-Error -Message ("Error. You need to specify how long back in time to filter on. All files that " + `
