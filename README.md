@@ -11,8 +11,9 @@ Optional file name filtering with a regular expression, otherwise all files are 
 Optional recursion. Resolve-Path support that allows for directories for instance two levels deep with something like `-Path C:\foo\*\*`.
 
 The times specified from ms to months are all cumulated and added together to
-form a large decimal-typed millisecond number. Months are handled with .NET date
-math as calendar months converted to milliseconds.
+form a large decimal-typed millisecond number. Time units are converted to milliseconds and handled with .NET date
+math. This should also account for the corner cases of leap seconds as of v1.1.0 of the module. In v1.0 (as currently in the 
+PSGallery; working on publishing the updated one), only months are handled with .NET date math.
 
 You can specify a `-NameRegexMatch` parameter to only target only file names
 that match this regular expression. The default is simply `.*`.
